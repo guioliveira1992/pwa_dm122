@@ -20,14 +20,15 @@ const assetsToCache = [
 
 async function cacheStaticAssets() {
   const cache = await caches.open(staticCache);
-  assetsToCache.forEach((assert) =>{
-    cache.add(assert)
-  })
-  // return cache.addAll(assetsToCache);
+  // assetsToCache.forEach((assert) =>{
+  //   cache.add(assert)
+  // })
+  return cache.addAll(assetsToCache);
 }
 
 async function networkFirst(request) {
   try {
+    console.log("executing network")
     return await fetch(request);
   } catch (error) {
     console.log("[Service Worker] network error", error);
@@ -47,7 +48,19 @@ self.addEventListener("activate", () => {
   return self.clients.claim();
 });
 
+async function cacheFirst(request) {
+  try {
+    console.log("executing cache")
+    const cache = await caches.open(staticCache);
+    const response = await cache.match(request);
+    console.log(response)
+    return response || fetch(request);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 self.addEventListener("fetch", (event) => {
   console.log("[Service Worker] Fetch event worker!", event.request.url);
-  event.respondWith(networkFirst(event.request));
+  event.respondWith(cacheFirst(event.request));
 });
