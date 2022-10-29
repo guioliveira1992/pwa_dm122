@@ -20,10 +20,10 @@ const assetsToCache = [
 
 async function cacheStaticAssets() {
   const cache = await caches.open(staticCache);
-  // assetsToCache.forEach((assert) =>{
-  //   cache.add(assert)
-  // })
-  return cache.addAll(assetsToCache);
+  assetsToCache.forEach((assert) =>{
+    return cache.add(assert)
+  })
+  // return cache.addAll(assetsToCache);
 }
 
 async function networkFirst(request) {
