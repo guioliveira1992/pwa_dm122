@@ -32,7 +32,10 @@ async function cacheCleanup() {
 
 async function cacheStaticAssets() {
   const cache = await caches.open(cacheName);
-  return cache.addAll(assetsToCache);
+  assetsToCache.forEach((assert)=>{
+    return cache.add(assert)
+  })
+  // return cache.addAll(assetsToCache);
 }
 
 self.addEventListener('install', (event) => {
