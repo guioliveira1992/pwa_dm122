@@ -12,7 +12,7 @@ const assetsToCache = [
   './app.js',
   './actions.js',
   './handler.js',
-  './store.js',
+  './db.js',
   './favicon.ico',
   './index.html',
   './'
@@ -52,10 +52,7 @@ async function cacheFirst(request) {
   try {
     console.log("executing cache")
     const cache = await caches.open(staticCache);
-    console.log(cache)
-    console.log(request)
     const response = await cache.match(request);
-    console.log(response)
     return response || fetch(request);
   } catch (error) {
     console.log(error);

@@ -224,6 +224,7 @@ input[type=submit] {
   height: 35px;
   margin-top: 3px;
   margin-left: 30px;
+  text-align: center;
 }
 
 /* Floating column for inputs: 75% width */

@@ -4,7 +4,7 @@ const db = new Dexie("buylist");
 
 
 db.version(1).stores({
-  buyList: "++id,name,price",
+  buyList: "++id,name,quantity,price",
 });
 
 

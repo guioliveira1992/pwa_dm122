@@ -1,4 +1,4 @@
-import { saveIndexDB, getItemsDDB, getItemDDB, updateIndexDB, deleteItemIndexDB } from "./store.js"
+import { saveIndexDB, getItemsDDB, getItemDDB, updateIndexDB, deleteItemIndexDB } from "./db.js"
 
 // Global Scope variable we need this
 var clickCount = 0;
@@ -15,17 +15,20 @@ function clicks(ev) {
                 console.log('singleClick');
                 let inputs = ev.target.childNodes[0].data.split(" - ")
                 let item = new Object()
-                console.log(item)
-                item.name = inputs[0]
+                console.log("split", inputs)
+                item.name = inputs[1]
                 let nameModal = document.getElementById("itemName")
                 let priceModal = document.getElementById("itemPrice")
                 let idModal = document.getElementById("itemId")
+                let quantityModal = document.getElementById("itemQuantity")
 
+                item.quantity = inputs[0].replace("x", "")
+                quantityModal.value = item.quantity
                 nameModal.value = item.name
                 if (inputs.length > 1) {
-                    inputs[1] = inputs[1].replace("R$ ", "")
-                    inputs[1] = inputs[1].replace(",", ".")
-                    item.price = inputs[1]
+                    inputs[2] = inputs[2].replace("R$ ", "")
+                    inputs[2] = inputs[2].replace(",", ".")
+                    item.price = inputs[2]
                     console.log(typeof (item.price))
                     priceModal.value = item.price
                 }
@@ -79,14 +82,23 @@ export function saveItem() {
 
     let priceItem = window.document.getElementById("itemPrice")
     let idItem = window.document.getElementById("itemId")
+    let quantityItem = window.document.getElementById("itemQuantity")
+    console.log("quantity", quantityItem.value)
     var item = new Object()
     item.name = nameItem.value
     item.price = priceItem.value
+    if (quantityItem.value == "") {
+        item.quantity = 1
+    } else {
+        item.quantity = quantityItem.value.replace("x", "")
+    }
+
     if (idItem.value != "") {
         item.id = idItem.value
     }
     nameItem.value = ""
     priceItem.value = ""
+    quantityItem.value = ""
     idItem.value = ""
     console.log("get", item)
     if (item.id !== undefined) {
@@ -95,6 +107,7 @@ export function saveItem() {
             console.log('update', itemDB, item)
             itemDB.name = item.name
             itemDB.price = item.price
+            itemDB.quantity = item.quantity
             updateIndexDB(itemDB)
         })
 
@@ -105,8 +118,8 @@ export function saveItem() {
 
     location.reload()
 
+    getItems()
 
-    newElement(item)
 }
 
 async function getItems() {
@@ -127,7 +140,9 @@ async function getItems() {
 function newElement(item) {
     var li = document.createElement("li");
     var inputValue = document.getElementById("myInput");
-    inputValue = item.name;
+    console.log("item saved", item)
+    inputValue = item.quantity += "x - "
+    inputValue += item.name;
     if (item.price !== "") {
         inputValue += " - R$ " + item.price
     }
