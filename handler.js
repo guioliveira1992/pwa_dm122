@@ -39,6 +39,9 @@ function clicks(ev) {
                     idModal.value = ev.target.childNodes[1].attributes.id.value
                 } else {
                     console.log(ev.target.id)
+                    nameModal.value = ""
+                    priceModal.value = ""
+                    quantityModal.value = ""
                     deleteItemIndexDB(ev.target.id)
                 }
 
@@ -46,7 +49,31 @@ function clicks(ev) {
             } else {
                 console.log('double click');
                 ev.target.classList.toggle('checked');
-                // Double click code, or invoke a function 
+                console.log(ev.target.classList.value)
+                // Double click code, or invoke a function
+                let inputs = ev.target.childNodes[0].data.split(" - ")
+                let item = new Object()
+                console.log("split", inputs)
+                item.name = inputs[1]
+                let nameModal = document.getElementById("itemName")
+                let priceModal = document.getElementById("itemPrice")
+                let quantityModal = document.getElementById("itemQuantity")
+
+                item.quantity = inputs[0].replace("x", "")
+                quantityModal.value = item.quantity
+                nameModal.value = item.name
+                if (inputs.length > 1) {
+                    inputs[2] = inputs[2].replace("R$ ", "")
+                    inputs[2] = inputs[2].replace(",", ".")
+                    item.price = inputs[2]
+                    console.log(typeof (item.price))
+                    priceModal.value = item.price
+                }
+
+                updateBuyTotal(item, ev)
+
+               
+
             }
             clickCount = 0;
         }, timeout || 300);
@@ -170,6 +197,23 @@ function newElement(item) {
             var div = this.parentElement;
             div.style.display = "none";
         }
+    }
+}
+
+function updateBuyTotal(item, ev) {
+    let buyTotal = document.getElementById("buyTotal")
+    let total = Number.parseFloat(buyTotal.textContent.replace("R$ ", ""))
+    if (ev.target.classList.value == "checked") {
+        total += Number.parseFloat(item.quantity * item.price)
+    } else {
+        if (total > 0) {
+            total -= Number.parseFloat(item.quantity * item.price)
+        }
+    }
+    if (total > 0) {
+        buyTotal.innerText = "R$ " + total
+    } else {
+        buyTotal.innerText = "R$ " + total + ",00"
     }
 }
 

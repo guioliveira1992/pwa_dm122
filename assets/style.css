@@ -2,6 +2,20 @@
   box-sizing: border-box;
 }
 
+.content {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  background-color: #ddd;
+}
+
+.box {
+  background-color: transparent;
+  height: 100px;
+  width: 45%;
+  margin: 8px;
+}
+
 /* Remove margins and padding from the list */
 ul {
   margin: 0;
@@ -108,7 +122,7 @@ ul li.checked::before {
   height: 60px;
   bottom: 40px;
   right: 40px;
-  background-color: #0C9;
+  background-color: #2580b0;
   color: #FFF;
   border-radius: 50px;
   text-align: center;
@@ -193,7 +207,7 @@ label {
 
 /* Style the submit button */
 input[type=submit] {
-  background-color: #04AA6D;
+  background-color: #2580b0;
   color: white;
   padding: 12px 20px;
   border: none;

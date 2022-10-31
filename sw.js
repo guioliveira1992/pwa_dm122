@@ -1,4 +1,4 @@
-const staticCache = "app-shell-v2";
+const staticCache = "app-shell-v3";
 
 const assetsToCache = [
   'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css',
@@ -7,6 +7,8 @@ const assetsToCache = [
   'https://fonts.googleapis.com/css?family=Roboto:400,700',
   'https://fonts.googleapis.com/icon?family=Material+Icons',
   './assets/images/pwa-logo.png',
+  './assets/images/purchase.svg',
+  './assets/images/purchase-original.svg',
   './assets/js/material.min.js',
   './assets/style.css',
   './app.js',
