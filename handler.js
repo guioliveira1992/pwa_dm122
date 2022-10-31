@@ -109,16 +109,20 @@ export function saveItem() {
             itemDB.price = item.price
             itemDB.quantity = item.quantity
             updateIndexDB(itemDB)
+            location.reload()
+
+            getItems()
         })
 
     } else {
         console.log('save')
         saveIndexDB(item)
+        location.reload()
+
+        getItems()
     }
 
-    location.reload()
 
-    getItems()
 
 }
 
