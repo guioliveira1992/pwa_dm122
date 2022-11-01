@@ -7,7 +7,6 @@ var timeout = 500;
 // Copy this function and it should work
 function clicks(ev) {
     // We modify clickCount variable here to check how many clicks there was
-
     clickCount++;
     if (clickCount == 1) {
         setTimeout(function () {
@@ -15,7 +14,6 @@ function clicks(ev) {
                 console.log('singleClick');
                 let inputs = ev.target.childNodes[0].data.split(" - ")
                 let item = new Object()
-                console.log("split", inputs)
                 item.name = inputs[1]
                 let nameModal = document.getElementById("itemName")
                 let priceModal = document.getElementById("itemPrice")
@@ -29,16 +27,13 @@ function clicks(ev) {
                     inputs[2] = inputs[2].replace("R$ ", "")
                     inputs[2] = inputs[2].replace(",", ".")
                     item.price = inputs[2]
-                    console.log(typeof (item.price))
                     priceModal.value = item.price
                 }
 
-                console.log(item)
                 if (item.name != '×' && item.price !== undefined) {
                     modal.style.display = "block";
                     idModal.value = Number.parseInt(ev.target.childNodes[1].attributes.id.value)
                 } else {
-                    console.log(ev.target.id)
                     nameModal.value = ""
                     priceModal.value = ""
                     quantityModal.value = ""
@@ -50,11 +45,9 @@ function clicks(ev) {
             } else {
                 console.log('double click');
                 ev.target.classList.toggle('checked');
-                // console.log("id", ev.target.childNodes[1].attributes.id.value)
                 // Double click code, or invoke a function
                 let inputs = ev.target.childNodes[0].data.split(" - ")
                 let item = new Object()
-                console.log("split", inputs)
                 item.name = inputs[1]
                 let nameModal = document.getElementById("itemName")
                 let priceModal = document.getElementById("itemPrice")
@@ -67,8 +60,7 @@ function clicks(ev) {
                 if (inputs.length > 1) {
                     inputs[2] = inputs[2].replace("R$ ", "")
                     inputs[2] = inputs[2].replace(",", ".")
-                    item.price = inputs[2]
-                    console.log(typeof (item.price))
+                    item.price = Number.parseFloat(inputs[2])
                     priceModal.value = item.price
                 }
 
@@ -79,9 +71,6 @@ function clicks(ev) {
                 nameModal.value = ""
                 priceModal.value = ""
                 quantityModal.value = ""
-
-
-
             }
             clickCount = 0;
         }, timeout || 300);
@@ -92,7 +81,6 @@ function clicks(ev) {
 // Open te modal when click on list item
 var list = document.querySelector('ul');
 list.addEventListener('click', function (ev) {
-
     clicks(ev)
 });
 
@@ -100,23 +88,20 @@ var close = document.getElementsByClassName("close");
 var i;
 for (i = 0; i < close.length; i++) {
     close[i].addEventListener('click', (e) => {
-        console.log(e)
         clicks(e)
     })
 }
 
 export function saveItem() {
-    console.log(window.document.getElementById("itemName"))
     let nameItem = window.document.getElementById("itemName")
 
 
     let priceItem = window.document.getElementById("itemPrice")
     let idItem = window.document.getElementById("itemId")
     let quantityItem = window.document.getElementById("itemQuantity")
-    console.log("quantity", quantityItem.value)
     var item = new Object()
     item.name = nameItem.value
-    item.price = priceItem.value
+    item.price = Number.parseFloat(priceItem.value)
     if (quantityItem.value == "") {
         item.quantity = 1
     } else {
@@ -131,25 +116,19 @@ export function saveItem() {
     priceItem.value = ""
     quantityItem.value = ""
     idItem.value = ""
-    console.log("get", item)
     if (item.id !== undefined) {
         getItemDDB(item.id).then((itemDB) => {
-
-            console.log('update', itemDB, item)
             itemDB.name = item.name
             itemDB.price = item.price
             itemDB.quantity = item.quantity
             updateIndexDB(itemDB)
             location.reload()
-
             getItems()
         })
 
     } else {
-        console.log('save')
         saveIndexDB(item)
         location.reload()
-
         getItems()
     }
 
@@ -158,18 +137,12 @@ export function saveItem() {
 }
 
 async function getItems() {
-
-    console.log("relaod items")
     getItemsDDB().then((result) => {
         result.forEach(element => {
-            console.log(element)
             newElement(element)
         });
     })
 }
-
-
-
 
 // Create a new list item when clicking on the "Add" button
 function newElement(item) {
@@ -181,8 +154,6 @@ function newElement(item) {
         updateBuyTotal(item, true)
     }
     
-
-    console.log("item saved", item)
     inputValue = item.quantity += "x - "
     inputValue += item.name;
     if (item.price !== "") {
@@ -228,8 +199,6 @@ function updateBuyTotal(item, isChecked) {
     } else {
         buyTotal.innerText = "R$ " + total + ",00"
     }
-    console.log("item updated", item)
-    
 }
 
 getItems()
