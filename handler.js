@@ -36,20 +36,21 @@ function clicks(ev) {
                 console.log(item)
                 if (item.name != '×' && item.price !== undefined) {
                     modal.style.display = "block";
-                    idModal.value = ev.target.childNodes[1].attributes.id.value
+                    idModal.value = Number.parseInt(ev.target.childNodes[1].attributes.id.value)
                 } else {
                     console.log(ev.target.id)
                     nameModal.value = ""
                     priceModal.value = ""
                     quantityModal.value = ""
                     deleteItemIndexDB(ev.target.id)
+                    location.reload()
                 }
 
                 // Single click code, or invoke a function 
             } else {
                 console.log('double click');
                 ev.target.classList.toggle('checked');
-                console.log(ev.target.classList.value)
+                // console.log("id", ev.target.childNodes[1].attributes.id.value)
                 // Double click code, or invoke a function
                 let inputs = ev.target.childNodes[0].data.split(" - ")
                 let item = new Object()
@@ -59,6 +60,7 @@ function clicks(ev) {
                 let priceModal = document.getElementById("itemPrice")
                 let quantityModal = document.getElementById("itemQuantity")
 
+                item.id = Number.parseInt(ev.target.childNodes[1].attributes.id.value)
                 item.quantity = inputs[0].replace("x", "")
                 quantityModal.value = item.quantity
                 nameModal.value = item.name
@@ -70,9 +72,15 @@ function clicks(ev) {
                     priceModal.value = item.price
                 }
 
-                updateBuyTotal(item, ev)
+                updateBuyTotal(item, (ev.target.classList.value == "checked"))
 
-               
+                updateIndexDB(item)
+
+                nameModal.value = ""
+                priceModal.value = ""
+                quantityModal.value = ""
+
+
 
             }
             clickCount = 0;
@@ -95,11 +103,6 @@ for (i = 0; i < close.length; i++) {
         console.log(e)
         clicks(e)
     })
-    // close[i].onclick = function(ev) {
-    //   var div = this.parentElement;
-
-    //   div.style.display = "none";
-    // }
 }
 
 export function saveItem() {
@@ -123,6 +126,7 @@ export function saveItem() {
     if (idItem.value != "") {
         item.id = idItem.value
     }
+    item.checked = false
     nameItem.value = ""
     priceItem.value = ""
     quantityItem.value = ""
@@ -171,6 +175,13 @@ async function getItems() {
 function newElement(item) {
     var li = document.createElement("li");
     var inputValue = document.getElementById("myInput");
+
+    if (item.checked == true) {
+        li.classList.toggle('checked')
+        updateBuyTotal(item, true)
+    }
+    
+
     console.log("item saved", item)
     inputValue = item.quantity += "x - "
     inputValue += item.name;
@@ -200,21 +211,25 @@ function newElement(item) {
     }
 }
 
-function updateBuyTotal(item, ev) {
+function updateBuyTotal(item, isChecked) {
     let buyTotal = document.getElementById("buyTotal")
     let total = Number.parseFloat(buyTotal.textContent.replace("R$ ", ""))
-    if (ev.target.classList.value == "checked") {
+    if (isChecked) {
         total += Number.parseFloat(item.quantity * item.price)
+        item.checked = true
     } else {
         if (total > 0) {
             total -= Number.parseFloat(item.quantity * item.price)
         }
+        item.checked = false
     }
     if (total > 0) {
-        buyTotal.innerText = "R$ " + total
+        buyTotal.innerText = "R$ " + total.toFixed(2)
     } else {
         buyTotal.innerText = "R$ " + total + ",00"
     }
+    console.log("item updated", item)
+    
 }
 
 getItems()

@@ -8,6 +8,7 @@ const assetsToCache = [
   'https://fonts.googleapis.com/icon?family=Material+Icons',
   './assets/images/pwa-logo.png',
   './assets/images/purchase.svg',
+  './assets/images/bag.svg',
   './assets/images/purchase-original.svg',
   './assets/js/material.min.js',
   './assets/style.css',
