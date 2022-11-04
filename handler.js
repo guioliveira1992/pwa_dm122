@@ -101,7 +101,12 @@ export function saveItem() {
     let quantityItem = window.document.getElementById("itemQuantity")
     var item = new Object()
     item.name = nameItem.value
-    item.price = Number.parseFloat(priceItem.value)
+    if(priceItem.value == ""){
+        item.price = 0.00
+    }else {
+        item.price = Number.parseFloat(priceItem.value)
+    }
+    
     if (quantityItem.value == "") {
         item.quantity = 1
     } else {
